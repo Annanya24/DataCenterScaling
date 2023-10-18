@@ -27,16 +27,16 @@ LIMIT 5;
 4.
 SELECT
     CASE
-        WHEN EXTRACT(YEAR FROM AGE(dd.ts, ad.dob)) < 1 THEN 'Kitten'
-        WHEN EXTRACT(YEAR FROM AGE(dd.ts, ad.dob)) >= 1 AND EXTRACT(YEAR FROM AGE(dd.ts, ad.dob)) <= 10 THEN 'Adult'
-        WHEN EXTRACT(YEAR FROM AGE(dd.ts, ad.dob)) > 10 THEN 'Senior'
+        WHEN DATE_PART('year', age(animal_dim.dob, date_dim.ts)) < 1 THEN 'Kitten'
+        WHEN DATE_PART('year', age(animal_dim.dob, date_dim.ts)) >= 1 AND DATE_PART('year', age(animal_dim.dob, date_dim.ts)) <= 10 THEN 'Adult'
+        WHEN DATE_PART('year', age(animal_dim.dob, date_dim.ts)) > 10 THEN 'Senior'
     END AS age_category,
     COUNT(*) AS count
-FROM outcomes_fact AS of
-JOIN animal_dim AS ad ON of.animal_dim_key = ad.animal_dim_key
-JOIN date_dim AS dd ON of.date_id = dd.date_id
-JOIN outcome_dim AS od ON of.outcome_id = od.outcome_id
-WHERE od.outcome_type = 'Adopted'
+FROM Outcomes_Fact
+JOIN animal_dim ON Outcomes_Fact.animal_dim_key = animal_dim.animal_dim_key
+JOIN Date_dim ON Outcomes_Fact.date_id = Date_dim.date_id
+JOIN Outcome_dim ON Outcomes_Fact.outcome_id = Outcome_dim.outcome_id
+WHERE Outcome_dim.outcome_type = 'Adoption'
 GROUP BY age_category;
 
 5.
