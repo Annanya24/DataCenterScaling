@@ -27,9 +27,9 @@ LIMIT 5;
 4.
 SELECT
     CASE
-        WHEN DATE_PART('year', age(animal_dim.dob, date_dim.ts)) < 1 THEN 'Kitten'
-        WHEN DATE_PART('year', age(animal_dim.dob, date_dim.ts)) >= 1 AND DATE_PART('year', age(animal_dim.dob, date_dim.ts)) <= 10 THEN 'Adult'
-        WHEN DATE_PART('year', age(animal_dim.dob, date_dim.ts)) > 10 THEN 'Senior'
+        WHEN EXTRACT(YEAR FROM AGE(date_dim.ts, animal_dim.dob)) < 1 THEN 'Kitten'
+        WHEN EXTRACT(YEAR FROM AGE(date_dim.ts, animal_dim.dob)) >= 1 AND EXTRACT(YEAR FROM AGE(date_dim.ts, animal_dim.dob)) <= 10 THEN 'Adult'
+        WHEN EXTRACT(YEAR FROM AGE(date_dim.ts, animal_dim.dob)) > 10 THEN 'Senior'
     END AS age_category,
     COUNT(*) AS count
 FROM Outcomes_Fact
