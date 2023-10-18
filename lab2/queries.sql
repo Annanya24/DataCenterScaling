@@ -21,12 +21,13 @@ HAVING COUNT(DISTINCT of.outcome_id) > 1;
 --What are the top 5 months for outcomes--
 SELECT
     month AS month_name,
-    COUNT(*) AS outcome_count
+    COUNT(DISTINCT Date_dim.date_id) AS outcome_count
 FROM Date_dim
-JOIN outcomes_fact ON Date_dim.date_id = outcomes_fact.date_id
-GROUP BY month
+JOIN Outcomes_Fact ON Date_dim.date_id = Outcomes_Fact.date_id
+GROUP BY month_name
 ORDER BY outcome_count DESC
 LIMIT 5;
+
 
 
 
