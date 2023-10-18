@@ -1,4 +1,4 @@
-
+--How many animals of each type have outcomes--
 SELECT td.animal_type, COUNT(distinct af.animal_dim_key) as animal_count
 FROM outcomes_fact af
 JOIN type_dim td ON af.type_id = td.type_id
@@ -7,7 +7,7 @@ GROUP BY td.animal_type;
 
 
 
-
+--How many animals are there with more than 1 outcome--
 select COUNT(*) as animals_with_multiple_outcomes
 FROM (
     SELECT af.animal_dim_key
@@ -19,7 +19,7 @@ FROM (
 
 
 
-
+--What are the top 5 months for outcomes--
 SELECT
     month AS month_name,
     COUNT(*) AS outcome_count
@@ -31,27 +31,28 @@ LIMIT 5;
 
 
 
-
+--Kitten Senior--
 
 SELECT
     CASE
-        WHEN EXTRACT(YEAR FROM AGE(date_dim.ts, animal_dim.dob)) < 1 THEN 'Kitten'
-        WHEN EXTRACT(YEAR FROM AGE(date_dim.ts, animal_dim.dob)) >= 1 AND EXTRACT(YEAR FROM AGE(date_dim.ts, animal_dim.dob)) <= 10 THEN 'Adult'
-        WHEN EXTRACT(YEAR FROM AGE(date_dim.ts, animal_dim.dob)) > 10 THEN 'Senior'
-    END AS age_category,
-    COUNT(*) AS count
-FROM Outcomes_Fact
-JOIN animal_dim ON Outcomes_Fact.animal_dim_key = animal_dim.animal_dim_key
-JOIN Date_dim ON Outcomes_Fact.date_id = Date_dim.date_id
-JOIN Outcome_dim ON Outcomes_Fact.outcome_id = Outcome_dim.outcome_id
-WHERE Outcome_dim.outcome_type = 'Adoption'
-GROUP BY age_category;
+        WHEN EXTRACT(YEAR FROM AGE(dd.ts, ad.dob)) < 1 THEN 'Kitten'
+        WHEN EXTRACT(YEAR FROM AGE(dd.ts, ad.dob)) >= 1 AND EXTRACT(YEAR FROM AGE(dd.ts, ad.dob)) <= 10 THEN 'Adult'
+        WHEN EXTRACT(YEAR FROM AGE(dd.ts, ad.dob)) > 10 THEN 'Senior'
+    END AS cat_age_group,
+    COUNT(*) AS outcome_count
+FROM Outcomes_Fact of
+JOIN Animal_dim ad ON of.animal_dim_key = ad.animal_dim_key
+JOIN Outcome_dim od ON of.outcome_id = od.outcome_id
+JOIN Type_dim td ON of.type_id = td.type_id
+JOIN Date_dim dd ON of.date_id = dd.date_id
+WHERE od.outcome_type = 'Adoption' AND td.animal_type = 'Cat'
+GROUP BY cat_age_group;
 
 
 
 
 
-
+-- cumulative total of outcomes up to and including this date--
 SELECT
     dd.ts AS date,
     od.outcome_type,
