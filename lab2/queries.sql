@@ -1,10 +1,13 @@
-1.
+
 SELECT td.animal_type, COUNT(distinct af.animal_dim_key) as animal_count
 FROM outcomes_fact af
 JOIN type_dim td ON af.type_id = td.type_id
 GROUP BY td.animal_type;
 
-2.
+
+
+
+
 select COUNT(*) as animals_with_multiple_outcomes
 FROM (
     SELECT af.animal_dim_key
@@ -14,7 +17,9 @@ FROM (
 ) 
 
 
-3.
+
+
+
 SELECT
     month AS month_name,
     COUNT(*) AS outcome_count
@@ -24,7 +29,10 @@ GROUP BY month
 ORDER BY outcome_count DESC
 LIMIT 5;
 
-4.
+
+
+
+
 SELECT
     CASE
         WHEN EXTRACT(YEAR FROM AGE(date_dim.ts, animal_dim.dob)) < 1 THEN 'Kitten'
@@ -39,7 +47,11 @@ JOIN Outcome_dim ON Outcomes_Fact.outcome_id = Outcome_dim.outcome_id
 WHERE Outcome_dim.outcome_type = 'Adoption'
 GROUP BY age_category;
 
-5.
+
+
+
+
+
 SELECT
     dd.ts AS date,
     od.outcome_type,
