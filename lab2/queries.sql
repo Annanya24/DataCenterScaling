@@ -8,13 +8,12 @@ GROUP BY td.animal_type;
 
 
 --How many animals are there with more than 1 outcome--
-select COUNT(*) as animals_with_multiple_outcomes
-FROM (
-    SELECT af.animal_dim_key
-    FROM outcomes_fact af
-    GROUP BY af.animal_dim_key
-    HAVING COUNT(*) > 1
-) 
+SELECT ad.animal_id, COUNT(DISTINCT of.outcome_id) AS outcome_count
+FROM Outcomes_Fact of
+JOIN Outcome_dim od ON of.outcome_id = od.outcome_id
+JOIN Animal_dim ad ON of.animal_dim_key = ad.animal_dim_key
+GROUP BY ad.animal_id
+HAVING COUNT(DISTINCT of.outcome_id) > 1;
 
 
 
